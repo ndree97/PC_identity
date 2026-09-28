@@ -1,0 +1,156 @@
+{
+    "sensor_types": {
+        "Terrestrial Laser Scanner (TLS)": {
+            "point_density": [
+                100,
+                10000
+            ],
+            "accuracy": [
+                0.001,
+                0.010
+            ],
+            "range": [
+                1,
+                1000
+            ],
+            "intensity_bits": 8,
+            "typical_returns": [
+                1,
+                5
+            ],
+            "has_rgb": false,
+            "scan_pattern": "spherical",
+            "examples": [
+                "Leica BLK360",
+                "FARO Focus",
+                "Riegl VZ-400"
+            ]
+        },
+        "Airborne LiDAR (ALS)": {
+            "point_density": [
+                2,
+                50
+            ],
+            "accuracy": [
+                0.05,
+                0.15
+            ],
+            "range": [
+                500,
+                3000
+            ],
+            "intensity_bits": 12,
+            "typical_returns": [
+                1,
+                5
+            ],
+            "has_rgb": true,
+            "scan_pattern": "linear",
+            "examples": [
+                "Optech Galaxy",
+                "Leica ALS80"
+            ]
+        },
+        "Mobile LiDAR (MLS)": {
+            "point_density": [
+                50,
+                2000
+            ],
+            "accuracy": [
+                0.02,
+                0.05
+            ],
+            "range": [
+                2,
+                200
+            ],
+            "intensity_bits": 8,
+            "typical_returns": [
+                1,
+                4
+            ],
+            "has_rgb": true,
+            "scan_pattern": "profile",
+            "examples": [
+                "Velodyne HDL-64E",
+                "Ouster OS1-128"
+            ]
+        },
+        "UAV LiDAR": {
+            "point_density": [
+                20,
+                300
+            ],
+            "accuracy": [
+                0.03,
+                0.10
+            ],
+            "range": [
+                5,
+                500
+            ],
+            "intensity_bits": 8,
+            "typical_returns": [
+                1,
+                3
+            ],
+            "has_rgb": true,
+            "scan_pattern": "rotating",
+            "examples": [
+                "DJI Zenmuse L1",
+                "YellowScan Surveyor"
+            ]
+        },
+        "Automotive LiDAR": {
+            "point_density": [
+                10,
+                100
+            ],
+            "accuracy": [
+                0.02,
+                0.05
+            ],
+            "range": [
+                0.5,
+                300
+            ],
+            "intensity_bits": 8,
+            "typical_returns": [
+                1,
+                2
+            ],
+            "has_rgb": false,
+            "scan_pattern": "rotating",
+            "examples": [
+                "Velodyne VLS-128",
+                "Ouster OS1-64"
+            ]
+        },
+        "Photogrammetry-based": {
+            "point_density": [
+                100,
+                500
+            ],
+            "accuracy": [
+                0.01,
+                0.05
+            ],
+            "range": [
+                1,
+                500
+            ],
+            "intensity_bits": 0,
+            "typical_returns": [
+                1,
+                1
+            ],
+            "has_rgb": true,
+            "scan_pattern": "dense_matching",
+            "examples": [
+                "Pix4D",
+                "Agisoft Metashape",
+                "RealityCapture"
+            ]
+        }
+    }
+}

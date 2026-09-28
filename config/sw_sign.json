@@ -1,0 +1,121 @@
+{
+    "sensor_manufacturers": {
+        "DJI": [
+            "dji",
+            "phantom",
+            "matrice"
+        ],
+        "Leica": [
+            "leica",
+            "blk",
+            "cyclone"
+        ],
+        "FARO": [
+            "faro",
+            "scene"
+        ],
+        "Riegl": [
+            "riegl"
+        ],
+        "Topcon": [
+            "topcon"
+        ],
+        "Trimble": [
+            "trimble"
+        ],
+        "Velodyne": [
+            "velodyne"
+        ],
+        "Ouster": [
+            "ouster"
+        ],
+        "Sick": [
+            "sick"
+        ],
+        "CloudCompare": [
+            "cloudcompare"
+        ],
+        "QGIS": [
+            "qgis"
+        ],
+        "pix4d": [
+            "pix4d"
+        ],
+        "Agisoft": [
+            "agisoft",
+            "metashape",
+            "photoscan"
+        ],
+        "Meshroom": [
+            "meshroom"
+        ],
+        "RealityCapture": [
+            "realitycapture"
+        ]
+    },
+    "post_processing": {
+        "CloudCompare": {
+            "strings": [
+                "cloudcompare",
+                "cc"
+            ],
+            "scale_pattern": "irregular",
+            "typical_operations": [
+                "merge",
+                "subsample",
+                "classification",
+                "registration"
+            ]
+        },
+        "LAStools": {
+            "strings": [
+                "lastools",
+                "rapidlasso",
+                "las2las",
+                "lasmerge",
+                "lasground"
+            ],
+            "scale_pattern": "optimized",
+            "typical_operations": [
+                "tiling",
+                "filtering",
+                "ground_classification"
+            ]
+        },
+        "PDAL": {
+            "strings": [
+                "pdal",
+                "filters.",
+                "writers.las"
+            ],
+            "scale_pattern": "preserved",
+            "typical_operations": [
+                "reprojection",
+                "noise_removal",
+                "ground_classification"
+            ]
+        },
+        "TerraSolid": {
+            "strings": [
+                "terrasolid",
+                "terrascan",
+                "terramatch"
+            ],
+            "scale_pattern": "standard",
+            "typical_operations": [
+                "strip_adjustment",
+                "classification"
+            ]
+        },
+        "Global Mapper": {
+            "strings": [
+                "global mapper"
+            ],
+            "scale_pattern": "standard",
+            "typical_operations": [
+                "export",
+                "format_conversion"
+            ]
+        }
+    }
+}

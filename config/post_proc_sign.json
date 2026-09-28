@@ -1,0 +1,21 @@
+{
+    "processing_indicators": {
+        "scale_anomalies": {
+            "unusual_scale": "Scale values > 1.0",
+            "non_uniform_scales": "Different scale factors for X, Y, Z",
+            "high_precision_offset": "Offset with > 4 decimal places"
+        },
+        "data_anomalies": {
+            "uniform_classification": "All points in same class",
+            "multiple_classifications": "Many classification classes (> 3)",
+            "zeroed_gps_time": "GPS time all zeros",
+            "sequential_gps_time": "Artificial sequential GPS time"
+        },
+        "structural_anomalies": {
+            "custom_vlr": "Custom VLR records (ID > 100)",
+            "extra_dimensions": "Custom scalar fields",
+            "zero_file_source_id": "File Source ID is 0",
+            "simplified_returns": "All single returns"
+        }
+    }
+}

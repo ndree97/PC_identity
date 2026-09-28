@@ -1,0 +1,41 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# Virtual environments
+venv/
+.venv/
+env/
+.env/
+
+# IDE & Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Point Cloud Data & Outputs (strictly ignored to prevent data leaks)
+input/
+output/
+*.las
+*.laz
+*.e57
+*.ply
+*.xyz
+*.pts
+*.pcd
+
+# Temporary files
+*.bak
+*.tmp
+todo.txt
+backup.py
