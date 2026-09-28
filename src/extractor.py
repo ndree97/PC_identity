@@ -45,6 +45,17 @@ class LASMetadataExtractor:
         self.sensor_det = SensorDetector(self.config_loader)
         self.processing_det = ProcessingDetector(self.config_loader)
 
+        # Inizializza estrattori per formati aggiuntivi (.e57, .ply)
+        from src.extractors.e57_extr import E57MetadataExtractor
+        from src.extractors.ply_extr import PLYMetadataExtractor
+
+        self.e57_ext = E57MetadataExtractor(
+            self.config_loader, self.software_det, self.sensor_det, self.processing_det
+        )
+        self.ply_ext = PLYMetadataExtractor(
+            self.config_loader, self.software_det, self.sensor_det, self.processing_det
+        )
+
         self.chunk_size = int(chunk_size)
         self._laz_backend = self._resolve_laz_backend(laz_backend)
 
@@ -69,14 +80,31 @@ class LASMetadataExtractor:
         }
         return mapping.get(str(name).lower(), None)
 
-    def extract(self, las_file_path: str) -> Dict[str, Any]:
+    def extract(self, file_path: str) -> Dict[str, Any]:
         """
-        Estrae TUTTI i metadati usando lettura a chunk e passata unica.
+        Estrae TUTTI i metadati supportando file .las, .laz, .e57, .ply.
         """
-        las_path = Path(las_file_path)
-        if not las_path.exists():
-            raise FileNotFoundError(f"File non trovato: {las_file_path}")
+        target_path = Path(file_path)
+        if not target_path.exists():
+            raise FileNotFoundError(f"File non trovato: {file_path}")
 
+        ext = target_path.suffix.lower()
+        if ext in [".las", ".laz"]:
+            return self._extract_las_laz(target_path)
+        elif ext == ".e57":
+            return self.e57_ext.extract(target_path)
+        elif ext == ".ply":
+            return self.ply_ext.extract(target_path)
+        else:
+            raise ValueError(
+                f"Formato non supportato '{ext}'. "
+                f"Formati supportati: .las, .laz, .e57, .ply"
+            )
+
+    def _extract_las_laz(self, las_path: Path) -> Dict[str, Any]:
+        """
+        Estrae TUTTI i metadati LAS/LAZ usando lettura a chunk e passata unica.
+        """
         # Apertura ottimizzata con backend LAZ opzionale
         # Nota: laspy autodetermina il backend se None; si può forzare Lazrs/LazrsParallel
         # per migliori performance su .laz quando disponibile.
@@ -229,6 +257,9 @@ class LASMetadataExtractor:
             except Exception:
                 pass
 
+            # Duplica per compatibilità chiavi inglesi/italiane
+            metadata["point_cloud_nature"] = metadata["punto_cloud_nature"]
+
         return metadata
 
     def save(self, metadata: Dict[str, Any], output_path: str) -> Path:
@@ -236,7 +267,7 @@ class LASMetadataExtractor:
 
     def print_key_parameters(self, metadata: Dict[str, Any]):
         print("\n" + "="*80)
-        print("PARAMETRI CHIAVE DEL FILE LAS")
+        print("PARAMETRI CHIAVE DEL FILE")
         print("="*80)
 
         # Nome file
@@ -417,3 +448,7 @@ class LASMetadataExtractor:
             return "GPS Week Time"
         except Exception:
             return None
+
+
+# Alias per terminologia generica
+PointCloudMetadataExtractor = LASMetadataExtractor

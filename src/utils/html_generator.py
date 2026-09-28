@@ -403,9 +403,9 @@ class HTMLGenerator:
         import os
 
         # Converte path relativo in assoluto per Windows
-        abs_path = os.path.abspath(output_path)
+        clean_abs_path = os.path.abspath(output_path).replace("\\", "/").replace(":", ":/").replace(" ", "%20")
         # Per Windows: C:\path -> file:///C:/path
-        file_url = f"file:///{abs_path.replace('\\', '/').replace(':', ':/').replace(' ', '%20')}"
+        file_url = f"file:///{clean_abs_path}"
 
         print(f"🌐 Link per aprire il report:")
         print(f"   {file_url}")
@@ -1210,9 +1210,9 @@ class HTMLGenerator:
         import os
 
         # Converte path relativo in assoluto per Windows
-        abs_path = os.path.abspath(output_path)
+        clean_abs_path = os.path.abspath(output_path).replace("\\", "/").replace(":", ":/").replace(" ", "%20")
         # Per Windows: C:\path -> file:///C:/path
-        file_url = f"file:///{abs_path.replace('\\', '/').replace(':', ':/').replace(' ', '%20')}"
+        file_url = f"file:///{clean_abs_path}"
 
         print(f"🌐 Link per aprire il report gruppo:")
         print(f"   {file_url}")

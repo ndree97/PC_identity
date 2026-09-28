@@ -1,48 +1,56 @@
-# LAS Metadata Extractor
+# PointCloud Identity Inspector
 
-Uno strumento Python modulare per l'analisi approfondita di file **LiDAR in formato LAS/LAZ**. Estrae automaticamente informazioni sulla natura della nuvola, il software che l'ha generata, il tipo di sensore utilizzato e le tracce di post-processing.
+Uno strumento Python modulare ed avanzato, dotato di **interfaccia grafica desktop Qt** e CLI, per l'analisi approfondita e la caratterizzazione di nuvole di punti in formato **LAS, LAZ, E57 e PLY**. Estrae automaticamente la "carta d'identità" del rilievo: software di generazione, sensore hardware (TLS, ALS, Mobile, Fotogrammetria UAV), coordinate, CRS/EPSG, statistiche dei punti e tracce di post-processing.
 
 ## Funzionalità Principali
 
-- **Analisi Completa del Header**: Versione LAS, formato punti, numero di punti
-- **Natura della Nuvola**: Returns, classificazioni, intensità, densità punti
-- **Sistema di Coordinate**: Scale, offset, bounding box, CRS/EPSG
-- **Rilevamento Software**: Identifica il sensore/software generatore tramite metadata e anomalie
-- **Inferenza Sensore**: Classifica il tipo di sensore (TLS, ALS, Mobile, UAV, ecc.) basandosi su parametri tecnici
-- **Post-Processing Detection**: Rileva se il file è stato elaborato con CloudCompare, LAStools, PDAL, ecc.
-- **Configurazione Esterna**: Database sensori e firme software in file JSON modificabili
+- **Interfaccia Grafica Desktop Qt**: GUI moderna con Drag & Drop di file e intere cartelle, tabella di avanzamento in tempo reale, ispettore parametri chiave e visualizzatore JSON interattivo.
+- **Supporto Multi-Formato**:
+  - **LAS / LAZ**: Analisi completa di header, formati punto, classi, scale, VLR e tempo GPS con decompressione parallela (`lazrs`).
+  - **E57 (ASTM E57)**: Supporto per scansioni multiple e singole, estrazione pose matriciali, bounds cartesiani e sferici, metadati dei sensori TLS (Faro, Leica, Trimble, Riegl).
+  - **PLY (Polygon File Format)**: Analisi header ASCII/binario, proprietà, campi scalari, conteggio vertici/facce, estrazione commenti software e inferenza fotogrammetria.
+- **Analisi della Natura della Nuvola**: Returns, classi di classificazione ASPRS, spettro di riflettanza/intensità, colori RGB e normali.
+- **Sistema di Coordinate & Georeferenziazione**: Offset, scale, bounding box 3D, CRS/EPSG e WKT proiettato.
+- **Rilevamento Software & Provenienza**: Identifica il software generatore o di post-processing (CloudCompare, FARO Scene, Leica Cyclone, Metashape, RealityCapture, LAStools, PDAL, ecc.).
+- **Inferenza Hardware del Sensore**: Classifica il tipo di sensore (TLS, ALS, Mobile LiDAR, Fotogrammetria UAV) con indice di confidenza.
+- **Report HTML Interattivi**: Generazione automatica di report visivi per singoli file e raggruppamenti automatici di scansioni correlate.
 
 ## Struttura del Progetto
 
 ```s
-LAS-Metadata-Extractor/
-├── main.py                      # Entry point
-├── config/                      # Configurazioni
-│   ├── sensor_database.json         # Database sensori LiDAR
-│   ├── software_signatures.json     # Firme software/sensori
-│   ├── classification_map.json      # Mappa classificazioni LAS
-│   └── post_processing_signatures.json
+PointCloud-Identity-Inspector/
+├── gui.py                       # Launcher interfaccia grafica desktop Qt
+├── main.py                      # Entry point CLI e GUI
+├── config/                      # Database configurazioni e firme
+│   ├── sensor_db.json               # Database sensori LiDAR / Fotogrammetria
+│   ├── sw_sign.json                 # Firme software e sensori
+│   ├── class_map.json               # Mappa classificazioni ASPRS
+│   └── post_proc_sign.json          # Firme di post-processing
 ├── src/                         # Moduli principali
-│   ├── __init__.py
-│   ├── extractor.py                 # Classe principale
-│   ├── extractors/                  # Estrattori specifici
-│   │   ├── __init__.py
-│   │   ├── metadata_extractor.py
-│   │   ├── intensity_extractor.py
-│   │   ├── classification_extractor.py
-│   │   ├── temporal_extractor.py
-│   │   └── coordinate_extractor.py
-│   ├── detectors/                   # Rilevatori
-│   │   ├── __init__.py
-│   │   ├── software_detector.py
-│   │   ├── sensor_detector.py
-│   │   ├── processing_detector.py
-│   │   └── georeferencing_detector.py
+│   ├── extractor.py                 # PointCloudMetadataExtractor principale
+│   ├── extractors/                  # Estrattori specifici per formato
+│   │   ├── e57_extr.py                  # Estrattore ASTM E57
+│   │   ├── ply_extr.py                  # Estrattore PLY
+│   │   ├── metadata_extr.py             # Header & metadati base
+│   │   ├── crs_extr.py                  # Sistemi di coordinate & CRS
+│   │   ├── intensity_extr.py            # Analisi intensità
+│   │   ├── class_extr.py                # Classificazioni
+│   │   └── timestamp_extr.py            # Tempo GPS e date
+│   ├── detectors/                   # Motori di inferenza
+│   │   ├── sw_detect.py                 # Rilevamento software
+│   │   ├── sensor_detect.py             # Classificazione sensore hardware
+│   │   └── process_detect.py            # Rilevamento post-processing
+│   ├── gui/                         # Interfaccia Grafica Qt
+│   │   ├── main_window.py               # Finestra principale, drag&drop, tabelle
+│   │   └── worker.py                    # Worker asincrono multi-thread (QThread)
 │   └── utils/
-│       ├── __init__.py
-│       ├── config_loader.py         # Caricamento JSON config
-│       └── file_handler.py          # Gestione file I/O
+│       ├── directory_handler.py         # Scansione batch directory
+│       ├── file_grouper.py              # Raggruppamento nuvole correlate
+│       ├── html_generator.py            # Generatore report HTML interattivi
+│       ├── config_load.py               # Loader configurazioni JSON
+│       └── file_handler.py              # Gestione I/O
 ├── requirements.txt
+├── LICENSE
 └── README.md
 ```
 
@@ -58,29 +66,47 @@ pip install -r requirements.txt
 
 ## Utilizzo
 
-### Analisi Singolo File
+### 🖥️ Interfaccia Grafica Desktop (Qt)
+Puoi avviare l'interfaccia grafica semplicemente eseguendo:
+
+```bash
+python gui.py
+# oppure
+python main.py
+```
+* Trascina direttamente file `.las`, `.laz`, `.e57` o `.ply` (o intere cartelle) nell'area di rilascio.
+* Seleziona le opzioni desiderate e premi **Avvia Analisi**.
+* Clicca su ogni riga per visualizzare la carta d'identità, il JSON formattato e aprire il report HTML nel browser.
+
+### ⌨️ Riga di Comando (CLI)
+
+#### Analisi Singolo File
 ```bash
 python main.py -i input.las
+# Supporta anche altri formati:
+python main.py -i input.laz
+python main.py -i scan.e57
+python main.py -i mesh.ply
 ```
 Salva automaticamente i risultati in `output/<filename>/<filename>_metadata.json` e genera il report `output/<filename>/<filename>_report.html`.
 
-### Analisi Directory (Batch)
+#### Analisi Directory in Batch
 ```bash
 python main.py -d /percorso/directory
 ```
-Analizza tutti i file supportati (`.las`, `.laz`, `.e57`, `.ply`), raggruppando i file correlati e generando statistiche aggregate e report HTML.
+Scansiona ricorsivamente tutti i file supportati (`.las`, `.laz`, `.e57`, `.ply`), raggruppando i file correlati e generando statistiche aggregate e report HTML.
 
-### Con Stampa Dettagliata a Console
+#### Con Stampa Dettagliata a Console
 ```bash
-python main.py -i input.las -p
+python main.py -i input.e57 -p
 ```
 
-### Specifica Directory di Configurazione
+#### Specifica Directory di Configurazione
 ```bash
 python main.py -i input.las -c config -p
 ```
 
-### Help
+#### Help CLI
 ```bash
 python main.py -h
 ```

@@ -13,14 +13,25 @@ if sys.platform == "win32":
 from src.extractor import LASMetadataExtractor
 
 def main():
+    # Avvia la GUI se non vengono passati argomenti o con flag --gui / -g
+    if len(sys.argv) == 1 or "--gui" in sys.argv or "-g" in sys.argv:
+        try:
+            from src.gui import run_gui
+            run_gui()
+            return
+        except ImportError as e:
+            print(f"Interfaccia grafica non disponibile ({e}). Uso modalità CLI.", file=sys.stderr)
+
     parser = argparse.ArgumentParser(
-        description="LAS Metadata Extractor - Analizza file LAS in dettaglio",
+        description="PointCloud Identity Inspector - Analizza nuvole di punti (.las, .laz, .e57, .ply)",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
     Esempi di utilizzo:
+    python main.py                           # Avvia interfaccia grafica Qt
+    python main.py --gui                     # Avvia interfaccia grafica Qt
     python main.py -i input.las              # analizza singolo file (parametri chiave + HTML)
-    python main.py -i input.las -p           # stampa metadati completi + HTML
-    python main.py -d /percorso/directory    # analizza directory (genera JSON+HTML per ogni file)
+    python main.py -i input.e57 -p           # stampa metadati completi + HTML
+    python main.py -d /percorso/directory    # analizza directory (supporta .las, .laz, .e57, .ply)
 
     Output structure:
     output/
@@ -33,19 +44,25 @@ def main():
             """
         )
 
+    parser.add_argument(
+        "-g", "--gui",
+        action="store_true",
+        help="Avvia l'interfaccia grafica Qt Desktop"
+    )
+
     # Gruppo esclusivo per input (file o directory)
     input_group = parser.add_mutually_exclusive_group(required=True)
 
     input_group.add_argument(
         "-i", "--input",
         type=str,
-        help="Percorso del file LAS da analizzare"
+        help="Percorso del file da analizzare (.las, .laz, .e57, .ply)"
     )
 
     input_group.add_argument(
         "-d", "--directory",
         type=str,
-        help="Percorso della directory da analizzare (cerca .las, .e57, .ply)"
+        help="Percorso della directory da analizzare (cerca .las, .laz, .e57, .ply)"
     )
     
     parser.add_argument(
