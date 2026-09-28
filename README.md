@@ -1,5 +1,6 @@
 # PointCloud Identity Inspector
 Uno strumento Python modulare ed avanzato, dotato di **interfaccia grafica desktop Qt** e CLI, per l'analisi approfondita e la caratterizzazione di nuvole di punti in formato **LAS, LAZ, E57 e PLY**. Estrae automaticamente la "carta d'identità" del rilievo: software di generazione, sensore hardware (TLS, ALS, Mobile, Fotogrammetria UAV), coordinate, CRS/EPSG, statistiche dei punti e tracce di post-processing.
+
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/)  
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![GUI: PyQt5](https://img.shields.io/badge/GUI-PyQt5-orange.svg)](https://riverbankcomputing.com/software/pyqt/) 
